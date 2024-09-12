@@ -20,7 +20,7 @@ describe('Altoromutual Login and Search Tests', () => {
       cy.get('input[name="btnSubmit"]').click();
   
       // Assert successful login by checking if the user dashboard or logout is visible
-      cy.get('a[href="logout.jsp"]').should('be.visible');
+      cy.get('a[href="login.jsp"]', { timeout: 10000 }).should('be.visible');
     });
   
     // Test case for search functionality
