@@ -1,4 +1,4 @@
-// commenting
+// commenting the line
 describe('Navigate to the facebook', () => {
   it('Should perform login', () => {
   cy.visit('https://www.facebook.com');

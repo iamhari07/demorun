@@ -1,59 +1,48 @@
-describe('Altoromutual Login and Search Tests', () => {
-  
-    // Replace with the actual URL
-    const baseUrl = 'http://demo.testfire.net'; 
-  
-    // Test case for successful login
-    it('Logs in with valid credentials', () => {
-      cy.visit(baseUrl);
-  
-      // Click on the login link or button if needed
-      cy.get('a[href="login.jsp"]').click();
-  
-      // Enter username
-      cy.get('#uid').type('admin'); // Replace 'admin' with your valid username
-  
-      // Enter password
-      cy.get('#passw').type('admin'); // Replace 'admin' with your valid password
-  
-      // Click on the Login button
-      cy.get('input[name="btnSubmit"]').click();
-  
-      // Assert successful login by checking if the user dashboard or logout is visible
-      cy.get('a[href="login.jsp"]', { timeout: 10000 }).should('be.visible');
-    });
-  
-    // Test case for search functionality
-    it('Searches for account-related information', () => {
-      cy.visit(baseUrl);
-  
-      // Assuming the user is already logged in or call the login logic here if needed
-  
-      // Perform a search action
-      cy.get('#query').type('banking'); // Adjust selector and search query based on actual functionality
-  
-      // Submit search
-      cy.get('input[type="submit"]').click();
-  
-      // Assert results are displayed
-      cy.get('.resultsTable').should('be.visible'); // Adjust this to match your result element
-    });
-  
-    // Test case for invalid login
-    it('Fails login with invalid credentials', () => {
-      cy.visit(baseUrl);
-      cy.get('a[href="login.jsp"]').click();
-  
-      // Enter invalid username and password
-      cy.get('#uid').type('invalid_user');
-      cy.get('#passw').type('wrong_password');
-  
-      // Attempt login
-      cy.get('input[name="btnSubmit"]').click();
-  
-      // Assert error message is shown
-      cy.contains('Login Failed').should('be.visible'); // Adjust this message if it's different
-    });
-  
+describe('OrangeHRM Login and Logout Test', () => {
+  const baseUrl = 'https://opensource-demo.orangehrmlive.com/web/index.php/auth/login';
+
+  beforeEach(() => {
+    // Visit the login page before each test
+    cy.visit(baseUrl);
   });
-  
+
+  it('should successfully log in with valid credentials and log out', () => {
+    // Enter username
+    cy.get('input[name="username"]').type('Admin');
+    
+    // Enter password
+    cy.get('input[name="password"]').type('admin123');
+    
+    // Click the login button
+    cy.get('button[type="submit"]').click();
+    
+    // Verify successful login by checking for an element only present after login
+    // For example, check if the profile icon is visible
+    cy.get('.oxd-userdropdown').should('be.visible');
+    
+    // Click the profile dropdown to access the logout button
+    cy.get('.oxd-userdropdown').click();
+    
+    // Click the logout button
+    cy.get('a[href="/web/index.php/auth/logout"]').click();
+    
+    // Verify successful logout by checking the URL or login page visibility
+    cy.url().should('include', '/auth/login');
+    cy.get('input[name="username"]').should('be.visible');
+  });
+
+  it('should show an error message with invalid credentials', () => {
+    // Enter incorrect username
+    cy.get('input[name="username"]').type('wronguser');
+    
+    // Enter incorrect password
+    cy.get('input[name="password"]').type('wrongpassword');
+    
+    // Click the login button
+    cy.get('button[type="submit"]').click();
+    
+    // Verify error message is shown
+    // The error message might vary, check the actual element or text
+    cy.get('.oxd-alert-content').should('contain.text', 'Invalid credentials');
+  });
+});
