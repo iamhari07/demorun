@@ -1,0 +1,16 @@
+name: Run a cypress Script
+on: push
+
+jobs:
+  Demo:
+    runs-on: windows-latest
+
+    steps:
+    - name: Clone repo
+      uses: actions/checkout@v4
+
+    - name: Execute Cypress Test
+      uses: cypress-io/github-action@v6
+      with:
+         command: npx cypress run
+         browser: chrome
